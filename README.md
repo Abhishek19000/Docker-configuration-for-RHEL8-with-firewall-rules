@@ -1,0 +1,1 @@
+# Docker-configuration-for-RHEL8-with-firewall-rules
