@@ -1,0 +1,44 @@
+Docker Configuration For RHEL8
+1)  cd /etc/yum.repos.d/
+2) vim docker.repo
+inside this folder inser information using i key
+------------------------------------------------
+[docker]
+baseurl=https://download.docker.com/linux/centos/7/x86_64/stable
+gpgcheck=0
+Note - here inside base url we can add any best website which provide us docker repo
+ex. docker ce index  -> search this in google.com
+------------------------------------------------------------------------------
+3)  yum repolist -> for checking that your docker repo is created or not if it not showing than again go into docker repo and check any error or spelling mistake.
+4) after docker repo created just install docker-ce using below cmd
+    yum install docker-ce -y --nobest
+     or
+    dnf 
+    
+  
+5) To start Docker-ce service
+  systemctl start docker 
+     
+  systemctl enable docker -> this will make docker service permanently on 
+------------------------------------------------------------------------------------------
+Now we need to add firewall rules into Base O.S to active masquerade , port 80 and 443 so that we won't face any difficulty in connectivity inside docker container.
+[Note Do all 4 steps in Base O.S means in ]
+make the following changes in firewall
+sometime facing troubles with the containers unable to resolve dns ( eg. unable to ping google.com or yum replist not working )
+Make the following changes to the firewall
+1. Masquerading allows for docker ingress and egress
+firewall-cmd --zone=public --add-masquerade --permanent
+2. Specifically allow incoming traffic on port 80/443 (nothing new here)
+firewall-cmd --zone=public --add-port=80/tcp
+firewall-cmd --zone=public --add-port=443/tcp
+3. Reload firewall to apply permanente rules
+firewall-cmd --reload
+4. Restart docker
+systemctl restart docker
+*******************************************************
+1. firewall-cmd --zone=public --add-masquerade --permanent
+2. firewall-cmd --zone=public --add-port=80/tcp
+3. firewall-cmd --zone=public --add-port=443/tcp
+4. firewall-cmd --reload
+5. systemctl restart docker
+Run this cmds in redhat VM and then launch Containers
